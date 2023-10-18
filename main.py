@@ -1,20 +1,58 @@
 import os
 import discord
+import settings
+import asyncio
 from discord.ext import commands
 from dotenv import load_dotenv
 
 intents = discord.Intents.default()
 intents.message_content = True
 
-client = discord.Client(command_prefix='!',intents=intents)
+bot = commands.Bot(command_prefix='!',intents=intents)
 
-@client.event
+# Function to load cogs dynamically
+async def load_cogs():
+    for cog_file in settings.COGS_DIR.glob('*.py'):
+        if cog_file.name != '__init__.py':
+            cog_module = f'cogs.{cog_file.stem}'
+            try:
+                await bot.load_extension(cog_module)
+                print(f"Loaded cog: {cog_module}")
+            except Exception as e:
+                print(f"Failed to load cog {cog_module}. Error: {e}")
+
+# Command to reload cogs
+@bot.command()
+async def reload(ctx, extension):
+    await ctx.message.delete()
+    await bot.unload_extension(f'cogs.{extension}')
+    await bot.load_extension(f'cogs.{extension}')
+    msg = await ctx.send(f'```ini\n[{extension}]: Reloaded\n```')
+    await asyncio.sleep(settings.autoDeleteDelay)
+    try:
+        await msg.delete()
+    except:
+        pass
+
+@bot.event
 async def on_ready():
-    print(f'We have logged in as {client.user}')
+    await load_cogs()
+    print(f'We have logged in as {bot.user}')
 
-@client.command()
-async def test(ctx):
-    await ctx.send('Hello!')
+# custom bot event that handles command errors
+@bot.event
+async def on_command_error(ctx, error):
+    await ctx.message.delete()
+    if(error):
+        msg = await ctx.send(f'```ini\n[Error]\n\n{error}\n```')
+    elif(ctx.invoked_with.lower() != 'help'):
+        msg = await ctx.send(f'```ini\n[Error]\n\nCommand \"{ctx.invoked_with}\" was not found\n```')
+    
+    await asyncio.sleep(settings.autoDeleteDelay)
+    try:
+        await msg.delete()
+    except:
+        pass
 
 load_dotenv()
-client.run(os.getenv('TOKEN'))
+bot.run(os.getenv('TOKEN'))
