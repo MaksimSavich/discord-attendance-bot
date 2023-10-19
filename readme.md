@@ -26,5 +26,4 @@ Explain how to get started with your project. Include instructions for setting u
     {
         "prefix": "!",
         "autoDeleteDelay": "30"
-        // Add any other configuration settings here
     }
