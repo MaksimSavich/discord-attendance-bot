@@ -17,7 +17,7 @@ class general(commands.Cog, description='General commands'):
     async def test(self, ctx):
         pass
 
-    # Deletes the command sent by the bot user
+    # Deletes the command sent by the user
     async def cog_before_invoke(self, ctx):
         await ctx.message.delete()
 

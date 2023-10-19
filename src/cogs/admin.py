@@ -26,7 +26,7 @@ class admin(commands.Cog, description='Administration commands'):
         await ctx.send('```ini\nRebooting...\n```')
         syscommands.reboot()
 
-    # Deletes the command sent by the bot user
+    # Deletes the command sent by the bot
     async def cog_before_invoke(self, ctx):
         await ctx.message.delete()
 
