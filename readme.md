@@ -21,7 +21,7 @@ Explain how to get started with your project. Include instructions for setting u
 2. Create a .env file in the base directory:
     ```env
     TOKEN=BOT_TOKEN
-3. Create a config.json in the ./src directory called config.json (Will be auto-gnerated in the future):
+3. Create a config.json in the ./src directory called config.json (Will be auto-generated in the future):
     ```json
     {
         "prefix": "!",
