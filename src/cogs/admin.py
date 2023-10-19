@@ -1,5 +1,5 @@
 import discord
-import settings
+import settings, syscommands
 import asyncio
 import random
 from discord.ext import commands
@@ -19,6 +19,12 @@ class admin(commands.Cog, description='Administration commands'):
             delay = random.random()
             await asyncio.sleep(delay)
             await message.delete()
+
+    # Reboot command
+    @commands.command(description='Reboots bot')
+    async def reboot(self, ctx):
+        await ctx.send('```ini\nRebooting...\n```')
+        syscommands.reboot()
 
     # Deletes the command sent by the bot user
     async def cog_before_invoke(self, ctx):

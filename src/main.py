@@ -1,6 +1,6 @@
 import os
 import discord
-import settings
+import settings, customHelp
 import asyncio
 from discord.ext import commands
 from dotenv import load_dotenv
@@ -8,7 +8,7 @@ from dotenv import load_dotenv
 intents = discord.Intents.default()
 intents.message_content = True
 
-bot = commands.Bot(command_prefix='!',intents=intents)
+bot = commands.Bot(command_prefix=settings.prefix, help_command=customHelp.customHelp() , intents=intents)
 
 # Function to load cogs dynamically
 async def load_cogs():
