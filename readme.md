@@ -11,8 +11,6 @@ A discord bot written in python using the discord.py library that handles user a
 
 ## Getting Started
 
-Explain how to get started with your project. Include instructions for setting up the necessary files and configurations.
-
 1. Clone this repository:
 
    ```shell
