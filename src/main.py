@@ -2,6 +2,7 @@ import os
 import discord
 import settings, customHelp
 import asyncio
+import json
 import pandas as pd
 from pathlib import Path
 from discord.ext import commands

@@ -14,12 +14,12 @@ A discord bot written in python using the discord.py library that handles user a
 1. Clone this repository:
 
    ```shell
-   git clone https://github.com/yourusername/your-project.git
+   git clone https://github.com/MaksimSavich/discord-attendance-bot.git
 
 2. Create a .env file in the base directory:
     ```env
     TOKEN=BOT_TOKEN
-3. Create a config.json in the ./src directory called config.json (Will be auto-generated in the future):
+3. Ensure that the config file that is generated at the first start looks similar as the content below:
     ```json
     {
         "prefix": "!",

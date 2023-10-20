@@ -1,5 +1,17 @@
+import os
 import pathlib
 import json
+
+if not os.path.isfile('./src/config.json'):
+    data = {
+        "prefix": "!",
+        "autoDeleteDelay": "30",
+        "modRoleID": "1234567"
+    }
+    json_object = json.dumps(data, indent=4)
+    with open("./src/config.json", "w") as outfile:
+        outfile.write(json_object)
+
 
 # Sets BASE_DIR = to the base directory
 BASE_DIR = pathlib.Path(__file__).parent
