@@ -31,9 +31,16 @@ class admin(commands.Cog, description='Administration commands'):
     async def fadd(self, ctx, member, *name: str):
         df = pd.read_csv('./dataframes/users.csv')
         if (member in df['uuid'].unique()):
-            print('Already in db')
+            await ctx.send('```ini\nThis user has already signed up.\n```')
             return
         df.loc[len(df.index)] = [name, member]
+        df.to_csv('./dataframes/users.csv', index=False)
+        await ctx.send('```ini\nThe user has been added.\n```')
+
+    @commands.command(description='Changes name of the user in the users database')
+    async def changename(self, ctx, member: int, *name:str):
+        df = pd.read_csv('./dataframes/users.csv')
+        df.loc[df[df['uuid'] == member].index[0], 'name'] = f'{name}'
         df.to_csv('./dataframes/users.csv', index=False)
 
     # Deletes the command sent by the bot
