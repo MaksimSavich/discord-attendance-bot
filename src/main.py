@@ -15,8 +15,11 @@ bot = commands.Bot(command_prefix=settings.prefix, help_command=customHelp.custo
 async def generate_dataframe_files():
     Path("./dataframes/").mkdir(parents=True, exist_ok=True)
     if not os.path.isfile('./dataframes/users.csv'):
-        df = pd.DataFrame(columns=['name','uuid'])
-        df.to_csv('./dataframes/users.csv', index=False)
+        dfUsers = pd.DataFrame(columns=['name','uuid'])
+        dfUsers.to_csv('./dataframes/users.csv', index=False)
+    if not os.path.isfile('./dataframes/eventlist.csv'):
+        dfEvents = pd.DataFrame(columns=['event_name','event_end_time'])
+        dfEvents.to_csv('./dataframes/eventlist.csv', index=False)
 
 # Function to load cogs dynamically
 async def load_cogs():

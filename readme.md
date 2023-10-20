@@ -23,5 +23,6 @@ A discord bot written in python using the discord.py library that handles user a
     ```json
     {
         "prefix": "!",
-        "autoDeleteDelay": "30"
+        "autoDeleteDelay": "30",
+        "modRoleID": 1234567
     }

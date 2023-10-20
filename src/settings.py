@@ -17,6 +17,7 @@ with open(CONFIG_DIR, "r") as file:
 # Variables that are set equal to the value of the key they are named the same ass
 prefix = config['prefix']
 autoDeleteDelay = int(config['autoDeleteDelay'])
+modRoleID = int(config['modRoleID'])
 
 # Function that modifies the value of a key value pair in config.json
 async def modifyConfig(key, value):
