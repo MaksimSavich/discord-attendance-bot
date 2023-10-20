@@ -21,13 +21,14 @@ class general(commands.Cog, description='General commands'):
     #     df.to_csv('users.csv', index=False)
 
     @commands.command(description='test')
-    async def add(self, ctx, name: str):
+    async def signup(self, ctx, *name: str):
         df = pd.read_csv('./dataframes/users.csv')
         if (ctx.message.author.id in df['uuid'].unique()):
-            print('Already in db')
+            await ctx.send('```ini\nYou have already signed up.\n```')
             return
         df.loc[len(df.index)] = [name, ctx.message.author.id]
         df.to_csv('./dataframes/users.csv', index=False)
+        await ctx.send('```ini\nYou have signed up.\n```')
 
     @commands.command(description='test')
     async def read(self, ctx):
