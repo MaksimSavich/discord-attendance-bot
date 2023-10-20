@@ -1,7 +1,8 @@
 import discord
+import os
 import settings
 import asyncio
-import random
+import pandas as pd
 from discord.ext import commands
 
 class general(commands.Cog, description='General commands'):
@@ -13,9 +14,25 @@ class general(commands.Cog, description='General commands'):
     msg = None
 
     # test command
+    # @commands.command(description='test')
+    # async def generate(self, ctx):
+    #     data1 = [['Maksim Savich', 653440672069845003]]
+    #     df = pd.DataFrame(data1, columns=['name','UUID'])
+    #     df.to_csv('users.csv', index=False)
+
     @commands.command(description='test')
-    async def test(self, ctx):
-        pass
+    async def add(self, ctx, name: str):
+        df = pd.read_csv('./dataframes/users.csv')
+        if (ctx.message.author.id in df['uuid'].unique()):
+            print('Already in db')
+            return
+        df.loc[len(df.index)] = [name, ctx.message.author.id]
+        df.to_csv('./dataframes/users.csv', index=False)
+
+    @commands.command(description='test')
+    async def read(self, ctx):
+        df = pd.read_csv('./dataframes/users.csv')
+        await ctx.send(df)
 
     # Deletes the command sent by the user
     async def cog_before_invoke(self, ctx):

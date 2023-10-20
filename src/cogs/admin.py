@@ -1,4 +1,5 @@
 import discord
+import pandas as pd
 import settings, syscommands
 import asyncio
 import random
@@ -25,6 +26,15 @@ class admin(commands.Cog, description='Administration commands'):
     async def reboot(self, ctx):
         await ctx.send('```ini\nRebooting...\n```')
         syscommands.reboot()
+
+    @commands.command(description='test')
+    async def fadd(self, ctx, member, name: str):
+        df = pd.read_csv('./dataframes/users.csv')
+        if (member in df['uuid'].unique()):
+            print('Already in db')
+            return
+        df.loc[len(df.index)] = [name, member]
+        df.to_csv('./dataframes/users.csv', index=False)
 
     # Deletes the command sent by the bot
     async def cog_before_invoke(self, ctx):
