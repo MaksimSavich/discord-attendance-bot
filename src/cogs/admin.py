@@ -27,12 +27,8 @@ class admin(commands.Cog, description='Administration commands'):
         await ctx.send('```ini\nRebooting...\n```')
         syscommands.reboot()
 
-    @commands.command(description='Get users db')
-    async def getusersdb(self, ctx):
-        await ctx.send(file=discord.File(r'./dataframes/users.csv'))
-
-    @commands.command(description='test')
-    async def fadd(self, ctx, member, name: str):
+    @commands.command(description='Force adds a new user to the users database')
+    async def fadd(self, ctx, member, *name: str):
         df = pd.read_csv('./dataframes/users.csv')
         if (member in df['uuid'].unique()):
             print('Already in db')

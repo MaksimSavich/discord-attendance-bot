@@ -2,6 +2,8 @@ import os
 import discord
 import settings, customHelp
 import asyncio
+import pandas as pd
+from pathlib import Path
 from discord.ext import commands
 from dotenv import load_dotenv
 
@@ -9,6 +11,12 @@ intents = discord.Intents.default()
 intents.message_content = True
 
 bot = commands.Bot(command_prefix=settings.prefix, help_command=customHelp.customHelp() , intents=intents)
+
+async def generate_dataframe_files():
+    Path("./dataframes/").mkdir(parents=True, exist_ok=True)
+    if not os.path.isfile('./dataframes/users.csv'):
+        df = pd.DataFrame(columns=['name','uuid'])
+        df.to_csv('./dataframes/users.csv', index=False)
 
 # Function to load cogs dynamically
 async def load_cogs():
@@ -36,6 +44,7 @@ async def reload(ctx, extension):
 
 @bot.event
 async def on_ready():
+    await generate_dataframe_files()
     await load_cogs()
     print(f'We have logged in as {bot.user}')
 
