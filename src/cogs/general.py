@@ -15,19 +15,15 @@ class general(commands.Cog, description='General commands'):
     msg = None
 
     @commands.command(description='Signs a user up for the attendance bot')
-    async def signup(self, ctx, *name: str):
+    @app_commands.command(name="signup",description="Signs a user up for the attendance bot")
+    async def signup(self, interaction: discord.Interaction, *name: str):
         df = pd.read_csv('./dataframes/users.csv')
-        if (ctx.message.author.id in df['uuid'].unique()):
-            await ctx.send('```ini\nYou have already signed up.\n```')
+        if (interaction.message.author.id in df['uuid'].unique()):
+            await interaction.response.send_message('```ini\nYou have already signed up.\n```')
             return
-        df.loc[len(df.index)] = [' '.join(name), ctx.message.author.id]
+        df.loc[len(df.index)] = [' '.join(name), interaction.message.author.id]
         df.to_csv('./dataframes/users.csv', index=False)
-        await ctx.send('```ini\nYou have signed up.\n```')
-
-    @app_commands.command(name="cog-mannu",description="Mannu is in a good cog")
-    @app_commands.check(permissions.is_mod)
-    async def slash_command(self, interaction: discord.Interaction):
-        await interaction.response.send_message("IM IN A COG!")
+        await interaction.response.send_message('```ini\nYou have signed up.\n```')
 
     # Deletes the command sent by the user
     # async def cog_before_invoke(self, ctx):
