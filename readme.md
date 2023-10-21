@@ -28,4 +28,4 @@ A discord bot written in python using the discord.py library that handles user a
     }
 
 ## TODO
-- [] Switch all commands to slash commands
+- [ ] Switch all commands to slash commands
