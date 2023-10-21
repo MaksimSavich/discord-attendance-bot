@@ -19,10 +19,13 @@ A discord bot written in python using the discord.py library that handles user a
 2. Create a .env file in the base directory:
     ```env
     TOKEN=BOT_TOKEN
-3. Ensure that the config file that is generated at the first start looks similar as the content below:
+3. Ensure that the config file that is generated at the first start looks similar to the content below:
     ```json
     {
         "prefix": "!",
         "autoDeleteDelay": "30",
         "modRoleID": 1234567
     }
+
+## TODO
+- [] Switch all commands to slash commands

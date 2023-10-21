@@ -19,7 +19,7 @@ async def generate_dataframe_files():
         dfUsers = pd.DataFrame(columns=['name','uuid'])
         dfUsers.to_csv('./dataframes/users.csv', index=False)
     if not os.path.isfile('./dataframes/eventlist.csv'):
-        dfEvents = pd.DataFrame(columns=['event_name','event_end_time'])
+        dfEvents = pd.DataFrame(columns=['event_name','code','event_end_time','event_end_time_unix'])
         dfEvents.to_csv('./dataframes/eventlist.csv', index=False)
 
 # Function to load cogs dynamically
@@ -50,6 +50,7 @@ async def reload(ctx, extension):
 async def on_ready():
     await generate_dataframe_files()
     await load_cogs()
+    await bot.tree.sync(guild=discord.Object(id=819420666615955457))
     print(f'We have logged in as {bot.user}')
 
 # custom bot event that handles command errors
