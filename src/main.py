@@ -50,7 +50,7 @@ async def reload(ctx, extension):
 async def on_ready():
     await generate_dataframe_files()
     await load_cogs()
-    await bot.tree.sync(guild=discord.Object(id=819420666615955457))
+    await bot.tree.sync(guild=discord.Object(id=settings.guildID))
     print(f'We have logged in as {bot.user}')
 
 # custom bot event that handles command errors

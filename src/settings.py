@@ -7,7 +7,7 @@ if not os.path.isfile('./src/config.json'):
     data = {
         "prefix": "!",
         "autoDeleteDelay": "30",
-        "modRoleID": "1234567"
+        "modRoleID": "12345679"
     }
     json_object = json.dumps(data, indent=4)
     with open("./src/config.json", "w") as outfile:
@@ -31,6 +31,7 @@ with open(CONFIG_DIR, "r") as file:
 prefix = config['prefix']
 autoDeleteDelay = int(config['autoDeleteDelay'])
 modRoleID = int(config['modRoleID'])
+guildID = int(config['guildID'])
 
 # Function that modifies the value of a key value pair in config.json
 async def modifyConfig(key, value):

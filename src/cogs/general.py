@@ -14,14 +14,13 @@ class general(commands.Cog, description='General commands'):
     # Variable that is set equal to the output from the bot so that it can be deleted after the cog is invoked
     msg = None
 
-    @commands.command(description='Signs a user up for the attendance bot')
     @app_commands.command(name="signup",description="Signs a user up for the attendance bot")
-    async def signup(self, interaction: discord.Interaction, *name: str):
+    async def signup(self, interaction: discord.Interaction, name: str):
         df = pd.read_csv('./dataframes/users.csv')
-        if (interaction.message.author.id in df['uuid'].unique()):
+        if (interaction.user.id in df['uuid'].unique()):
             await interaction.response.send_message('```ini\nYou have already signed up.\n```')
             return
-        df.loc[len(df.index)] = [' '.join(name), interaction.message.author.id]
+        df.loc[len(df.index)] = [' '.join(name), interaction.user.id]
         df.to_csv('./dataframes/users.csv', index=False)
         await interaction.response.send_message('```ini\nYou have signed up.\n```')
 
@@ -41,7 +40,4 @@ class general(commands.Cog, description='General commands'):
 
 # Registers the cog
 async def setup(bot):
-    await bot.add_cog(
-        general(bot),
-        guilds = [discord.Object(id=819420666615955457)]  
-        )
+    await bot.add_cog(general(bot) ,guilds = [discord.Object(id=settings.guildID)])

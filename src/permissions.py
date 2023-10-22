@@ -1,10 +1,11 @@
+import discord
 import settings
 from discord.ext import commands
 
-def is_admin(ctx):
+def is_admin(interaction: discord.Interaction):
     # Check if the user invoking the command has admin permissions
-    return ctx.author.guild_permissions.manage_guild
+    return interaction.user.guild_permissions.manage_guild
 
-def is_mod(ctx):
+def is_mod(interaction: discord.Interaction):
     # Check if the user invoking the command has a specific role ID
-    return settings.modRoleID in [role.id for role in ctx.author.roles]
+    return settings.modRoleID in [role.id for role in interaction.user.roles]
