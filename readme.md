@@ -24,7 +24,8 @@ A discord bot written in python using the discord.py library that handles user a
     {
         "prefix": "!",
         "autoDeleteDelay": "30",
-        "modRoleID": 1234567
+        "modRoleID": "1234567",
+        "guildID": "1234567"
     }
 
 ## TODO
