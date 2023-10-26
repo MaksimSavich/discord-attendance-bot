@@ -20,7 +20,7 @@ async def generate_dataframe_files():
         dfUsers = pd.DataFrame(columns=['name','uuid'])
         dfUsers.to_csv('./dataframes/users.csv', index=False)
     if not os.path.isfile('./dataframes/eventlist.csv'):
-        dfEvents = pd.DataFrame(columns=['event_name','code','event_end_time','event_end_time_unix'])
+        dfEvents = pd.DataFrame(columns=['event_name','code','event_creation_date','event_end_time','event_end_time_unix','filename'])
         dfEvents.to_csv('./dataframes/eventlist.csv', index=False)
 
 # Function to load cogs dynamically
@@ -40,6 +40,11 @@ async def reload(interaction: discord.Interaction, extension: str):
     await bot.unload_extension(f'cogs.{extension}')
     await bot.load_extension(f'cogs.{extension}')
     await interaction.response.send_message(f'```ini\n[{extension}]: Reloaded\n```')
+
+# @tasks.loop(seconds=5.0)
+# async def event_end_check(self):
+#     print(self.index)
+#     self.index += 1
 
 @bot.event
 async def on_ready():
