@@ -1,11 +1,12 @@
 import os
 import discord
-import settings, customHelp
+import settings, customHelp, permissions
 import asyncio
 import json
 import pandas as pd
 from pathlib import Path
-from discord.ext import tasks,commands
+from discord.ext import commands
+from discord import app_commands
 from dotenv import load_dotenv
 
 intents = discord.Intents.default()
@@ -33,18 +34,12 @@ async def load_cogs():
             except Exception as e:
                 print(f"Failed to load cog {cog_module}. Error: {e}")
 
-# Command to reload cogs
-@bot.command()
-async def reload(ctx, extension):
-    await ctx.message.delete()
+@app_commands.command(name="reload",description="Reloads cogs")
+@app_commands.check(permissions.is_admin)
+async def reload(interaction: discord.Interaction, extension: str):
     await bot.unload_extension(f'cogs.{extension}')
     await bot.load_extension(f'cogs.{extension}')
-    msg = await ctx.send(f'```ini\n[{extension}]: Reloaded\n```')
-    await asyncio.sleep(settings.autoDeleteDelay)
-    try:
-        await msg.delete()
-    except:
-        pass
+    await interaction.response.send_message(f'```ini\n[{extension}]: Reloaded\n```')
 
 # @tasks.loop(seconds=5.0)
 # async def event_end_check(self):
