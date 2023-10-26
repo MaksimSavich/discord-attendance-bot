@@ -1,7 +1,5 @@
 import discord
-import os
-import settings, permissions
-import asyncio
+import settings
 import pandas as pd
 from discord.ext import commands
 from discord import app_commands
@@ -23,6 +21,23 @@ class general(commands.Cog, description='General commands'):
         df.loc[len(df.index)] = [' '.join(name), interaction.user.id]
         df.to_csv('./dataframes/users.csv', index=False)
         await interaction.response.send_message('```ini\nYou have signed up.\n```')
+
+    @app_commands.command(name="attend",description="Allows user to attend an event")
+    async def attend(self, interaction: discord.Interaction, code:str):
+        code = code.split(' ')[0].lower()
+        if interaction.channel_id == settings.attendanceChannel:
+            dfUser = pd.read_csv('./dataframes/users.csv')
+            if (interaction.user.id in dfUser['uuid'].unique()):
+                dfEventCheck = pd.read_csv('./dataframes/eventlist.csv')
+                if (code in dfEventCheck['code'].unique()):
+                        filename = dfEventCheck.loc[dfEventCheck[dfEventCheck['code'] == code].index[0], 'filename']
+                        name = dfUser.loc[dfUser[dfUser['uuid'] == interaction.user.id].index[0], 'name']
+                        dfEvent = pd.read_csv(f'./dataframes/{filename}.csv')
+                        dfEvent.loc[len(dfEvent.index)] = [name,interaction.user.id]
+                        dfEvent.to_csv(f'./dataframes/{filename}.csv', index=False)
+
+        
+                        
 
     # Deletes the command sent by the user
     # async def cog_before_invoke(self, ctx):

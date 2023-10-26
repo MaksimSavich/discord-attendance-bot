@@ -32,6 +32,7 @@ prefix = config['prefix']
 autoDeleteDelay = int(config['autoDeleteDelay'])
 modRoleID = int(config['modRoleID'])
 guildID = int(config['guildID'])
+attendanceChannel = int(config['attendanceChannel'])
 
 # Function that modifies the value of a key value pair in config.json
 async def modifyConfig(key, value):

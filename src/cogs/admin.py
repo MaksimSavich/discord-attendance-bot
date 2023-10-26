@@ -4,6 +4,9 @@ import settings, syscommands, permissions
 import asyncio
 import random
 import importlib
+import time
+import math
+from datetime import datetime
 from discord.ext import commands
 from discord import app_commands
 
@@ -19,6 +22,12 @@ class admin(commands.Cog, description='Administration commands'):
     @app_commands.check(permissions.is_admin)
     async def updatemodrole(self, interaction: discord.Interaction, role_id: str):
         await settings.modifyConfig('modRoleID', role_id)
+        importlib.reload(settings)
+
+    @app_commands.command(name="setattendancechannel",description="Updates the attendance channel ID")
+    @app_commands.check(permissions.is_admin)
+    async def updatemodrole(self, interaction: discord.Interaction, channel_id: str):
+        await settings.modifyConfig('attendanceChannel', channel_id)
         importlib.reload(settings)
 
     @app_commands.command(name="purge",description="Purges chat")
@@ -61,9 +70,27 @@ class admin(commands.Cog, description='Administration commands'):
 
     @app_commands.command(name="startevent",description="Creates an event")
     @app_commands.check(permissions.is_mod)
-    async def startevent(self, interaction: discord.Interaction):
-        pass
-
+    async def startevent(self, interaction: discord.Interaction, event_name:str, code:str, hours:int):
+        df = pd.read_csv('./dataframes/eventlist.csv')
+        code = code.split(' ')[0].lower()
+        event_name = event_name.split(' ')[0].lower()
+        if (code in df['code'].unique()):
+            await interaction.response.send_message('```Event Already Exists with that code!```')
+            return
+        if (code in df['event_name'].unique()):
+            await interaction.response.send_message('```Event Already Exists with that name!```')
+            return
+        epoch = math.floor(time.time())
+        timestamp = datetime.fromtimestamp(epoch)
+        epoch = epoch + (3600 * hours)
+        endtime = datetime.fromtimestamp(epoch)
+        filename = f'{event_name}_{str(timestamp).split(" ")[0]}'
+        df.loc[len(df.index)] = [event_name,code,timestamp,endtime,epoch,filename]
+        df.to_csv('./dataframes/eventlist.csv', index=False)
+        dfNewEvent = pd.DataFrame(columns=['name','uuid'])
+        dfNewEvent.to_csv(f'./dataframes/{filename}.csv', index=False)
+        await interaction.response.send_message('```Event Created```')
+        
     # Deletes the command sent by the user
     # async def cog_before_invoke(self, ctx):
     #     await ctx.message.delete()
