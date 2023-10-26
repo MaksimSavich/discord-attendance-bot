@@ -20,10 +20,12 @@ class admin(commands.Cog, description='Administration commands'):
     async def updatemodrole(self, interaction: discord.Interaction, role_id: str):
         await settings.modifyConfig('modRoleID', role_id)
         importlib.reload(settings)
+        await interaction.response.send_message('```ini\nMod role updated.\n```')
 
     @app_commands.command(name="purge",description="Purges chat")
     @app_commands.check(permissions.is_mod)
     async def purge(self, interaction: discord.Interaction, amount: int):
+        msg = await interaction.response.send_message(f'```ini\nPurging {amount} messages.\n```', ephemeral=True)
         async for message in interaction.channel.history(limit=amount):
             delay = random.random()
             await asyncio.sleep(delay)
@@ -47,7 +49,7 @@ class admin(commands.Cog, description='Administration commands'):
         if (int(user_id) in df['uuid'].unique()):
             await interaction.response.send_message('```ini\nThis user has already signed up.\n```')
             return
-        df.loc[len(df.index)] = [' '.join(name), int(user_id)]
+        df.loc[len(df.index)] = [name, int(user_id)]
         df.to_csv('./dataframes/users.csv', index=False)
         await interaction.response.send_message('```ini\nThe user has been added.\n```')
 
@@ -55,7 +57,7 @@ class admin(commands.Cog, description='Administration commands'):
     @app_commands.check(permissions.is_mod)
     async def changename(self, interaction: discord.Interaction, user_id: int, name:str):
         df = pd.read_csv('./dataframes/users.csv')
-        df.loc[df[df['uuid'] == user_id].index[0], 'name'] = ' '.join(name)
+        df.loc[df[df['uuid'] == user_id].index[0], 'name'] = name
         df.to_csv('./dataframes/users.csv', index=False)
         await interaction.response.send_message('```ini\nThe user\'s name has been updated.\n```')
 

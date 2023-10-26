@@ -20,7 +20,7 @@ class general(commands.Cog, description='General commands'):
         if (interaction.user.id in df['uuid'].unique()):
             await interaction.response.send_message('```ini\nYou have already signed up.\n```')
             return
-        df.loc[len(df.index)] = [' '.join(name), interaction.user.id]
+        df.loc[len(df.index)] = [name, interaction.user.id]
         df.to_csv('./dataframes/users.csv', index=False)
         await interaction.response.send_message('```ini\nYou have signed up.\n```')
 
