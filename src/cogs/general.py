@@ -34,12 +34,9 @@ class general(commands.Cog, description='General commands'):
         code = code.split(' ')[0].lower()
         if interaction.channel_id == settings.attendanceChannel:
             dfUser = pd.read_csv('./dataframes/users.csv')
-            print('1')
             if (interaction.user.id in dfUser['uuid'].unique()):
                 dfEventCheck = pd.read_csv('./dataframes/eventlist.csv')
-                print('2')
                 if (code in dfEventCheck['code'].unique()):
-                        print('3')
                         filename = dfEventCheck.loc[dfEventCheck[dfEventCheck['code'] == code].index[0], 'filename']
                         name = dfUser.loc[dfUser[dfUser['uuid'] == interaction.user.id].index[0], 'name']
                         dfEvent = pd.read_csv(f'./dataframes/{filename}.csv')
