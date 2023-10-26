@@ -41,11 +41,6 @@ async def reload(interaction: discord.Interaction, extension: str):
     await bot.load_extension(f'cogs.{extension}')
     await interaction.response.send_message(f'```ini\n[{extension}]: Reloaded\n```')
 
-# @tasks.loop(seconds=5.0)
-# async def event_end_check(self):
-#     print(self.index)
-#     self.index += 1
-
 @bot.event
 async def on_ready():
     await generate_dataframe_files()

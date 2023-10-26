@@ -1,16 +1,23 @@
 import discord
 import settings
 import pandas as pd
-from discord.ext import commands
+from discord.ext import commands, tasks
 from discord import app_commands
 
 class general(commands.Cog, description='General commands'):
 
     def __init__(self, bot):
         self.bot = bot
+        # self.index = 0
+        # self.printer.start()
 
     # Variable that is set equal to the output from the bot so that it can be deleted after the cog is invoked
     msg = None
+
+    # @tasks.loop(seconds=5.0)
+    # async def printer(self):
+    #     print(self.index)
+    #     self.index += 1
 
     @app_commands.command(name="signup",description="Signs a user up for the attendance bot")
     async def signup(self, interaction: discord.Interaction, name: str):
@@ -27,14 +34,23 @@ class general(commands.Cog, description='General commands'):
         code = code.split(' ')[0].lower()
         if interaction.channel_id == settings.attendanceChannel:
             dfUser = pd.read_csv('./dataframes/users.csv')
+            print('1')
             if (interaction.user.id in dfUser['uuid'].unique()):
                 dfEventCheck = pd.read_csv('./dataframes/eventlist.csv')
+                print('2')
                 if (code in dfEventCheck['code'].unique()):
+                        print('3')
                         filename = dfEventCheck.loc[dfEventCheck[dfEventCheck['code'] == code].index[0], 'filename']
                         name = dfUser.loc[dfUser[dfUser['uuid'] == interaction.user.id].index[0], 'name']
                         dfEvent = pd.read_csv(f'./dataframes/{filename}.csv')
+                        if (interaction.user.id in dfEvent['uuid'].unique()):
+                            await interaction.response.send_message('```ini\nYour attendance has already been marked.\n```')
+                            return
                         dfEvent.loc[len(dfEvent.index)] = [name,interaction.user.id]
                         dfEvent.to_csv(f'./dataframes/{filename}.csv', index=False)
+                        await interaction.response.send_message('```ini\nYour attendance has been recorded.\n```')
+                else:
+                    await interaction.response.send_message('```ini\nWrong code!\n```')
 
         
                         
