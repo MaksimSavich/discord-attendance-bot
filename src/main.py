@@ -34,9 +34,20 @@ async def load_cogs():
             except Exception as e:
                 print(f"Failed to load cog {cog_module}. Error: {e}")
 
-@app_commands.command(name="reload",description="Reloads cogs")
+async def reload_autocomplete(
+    interaction: discord.Interaction,
+    current: str,
+) -> list[app_commands.Choice[str]]:
+    cogs = ['general', 'admin']
+    return [
+        app_commands.Choice(name=cog, value=cog)
+        for cog in cogs if current.lower() in cog.lower()
+    ]
+
+@bot.tree.command(name="reloads",description="Reloads cogs", guild=discord.Object(id=settings.guildID))
 @app_commands.check(permissions.is_admin)
-async def reload(interaction: discord.Interaction, extension: str):
+@app_commands.autocomplete(extension=reload_autocomplete)
+async def reloads(interaction: discord.Interaction, extension: str):
     await bot.unload_extension(f'cogs.{extension}')
     await bot.load_extension(f'cogs.{extension}')
     await interaction.response.send_message(f'```ini\n[{extension}]: Reloaded\n```')
