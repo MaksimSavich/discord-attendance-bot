@@ -1,4 +1,5 @@
 import discord
+import os
 import pandas as pd
 import settings, syscommands, permissions
 import asyncio
@@ -75,6 +76,25 @@ class admin(commands.Cog, description='Administration commands'):
         df.loc[df[df['uuid'] == user_id].index[0], 'name'] = name
         df.to_csv('./dataframes/users.csv', index=False)
         await interaction.response.send_message('```ini\nThe user\'s name has been updated.\n```')
+
+    @app_commands.command(name="endevent",description="Ends an event")
+    @app_commands.check(permissions.is_mod)
+    async def endevent(self, interaction: discord.Interaction, code:str):
+        code = code.split(' ')[0].lower()
+        channel = self.bot.get_channel(settings.attendanceOutputChannel)
+        df = pd.read_csv('./dataframes/eventlist.csv')
+        index = df.loc[df['code'] == code].index[0]
+        if channel:
+            try:
+                filename = df.loc[index, "filename"]
+                await channel.send(file=discord.File(rf'./dataframes/{filename}.csv'))
+                df.drop(index, inplace=True)
+                df.to_csv('./dataframes/eventlist.csv', index=False)
+                os.remove(f'./dataframes/{filename}.csv')
+            except Exception as e:
+                print(f'An error occurred while sending the file: {e}')
+        else:
+            print('Channel not found.')
 
     @app_commands.command(name="startevent",description="Creates an event")
     @app_commands.check(permissions.is_mod)

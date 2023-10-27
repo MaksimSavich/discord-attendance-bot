@@ -32,4 +32,5 @@ A discord bot written in python using the discord.py library that handles user a
 - [x] Switch all commands to slash commands
 - [X] Ensure everything works smoothly with slash commands
 - [ ] Slash command error handling
+- [ ] Clean up outputs
 - [X] Finish multi-event setup
