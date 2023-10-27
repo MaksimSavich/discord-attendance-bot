@@ -1,4 +1,5 @@
 import discord
+import os
 import time
 import math
 import settings
@@ -11,17 +12,28 @@ class general(commands.Cog, description='General commands'):
     def __init__(self, bot):
         self.bot = bot
         # self.index = 0
-        # self.printer.start()
+        self.printer.start()
 
     # Variable that is set equal to the output from the bot so that it can be deleted after the cog is invoked
     msg = None
 
     @tasks.loop(seconds=5.0)
     async def printer(self):
-        df = pd.read_csv('./dataframes/users.csv')
-        for i in len(df.index):
-            df.loc[df[df['event_end_time_unix'] == math.floor(time.time())].index[0], 'name']
-
+        channel = self.bot.get_channel(settings.attendanceOutputChannel)
+        df = pd.read_csv('./dataframes/eventlist.csv')
+        for index, row in df.iterrows():
+            if row['event_end_time_unix'] < math.floor(time.time()):
+                if channel:
+                    try:
+                        filename = df.loc[index, "filename"]
+                        await channel.send(file=discord.File(rf'./dataframes/{filename}.csv'))
+                        df.drop(index, inplace=True)
+                        df.to_csv('./dataframes/eventlist.csv', index=False)
+                        os.remove(f'./dataframes/{filename}.csv')
+                    except Exception as e:
+                        print(f'An error occurred while sending the file: {e}')
+                else:
+                        print('Channel not found.')
 
     @app_commands.command(name="signup",description="Signs a user up for the attendance bot")
     async def signup(self, interaction: discord.Interaction, name: str):

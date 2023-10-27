@@ -33,6 +33,7 @@ autoDeleteDelay = int(config['autoDeleteDelay'])
 modRoleID = int(config['modRoleID'])
 guildID = int(config['guildID'])
 attendanceChannel = int(config['attendanceChannel'])
+attendanceOutputChannel = int(config['attendanceOutputChannel'])
 
 # Function that modifies the value of a key value pair in config.json
 async def modifyConfig(key, value):

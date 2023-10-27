@@ -27,8 +27,14 @@ class admin(commands.Cog, description='Administration commands'):
 
     @app_commands.command(name="setattendancechannel",description="Updates the attendance channel ID")
     @app_commands.check(permissions.is_admin)
-    async def updatemodrole(self, interaction: discord.Interaction, channel_id: str):
+    async def setattendancechannel(self, interaction: discord.Interaction, channel_id: str):
         await settings.modifyConfig('attendanceChannel', channel_id)
+        importlib.reload(settings)
+
+    @app_commands.command(name="setoutput",description="Updates the attendance output channel ID")
+    @app_commands.check(permissions.is_admin)
+    async def setoutput(self, interaction: discord.Interaction, channel_id: str):
+        await settings.modifyConfig('attendanceOutputChannel', channel_id)
         importlib.reload(settings)
 
     @app_commands.command(name="purge",description="Purges chat")

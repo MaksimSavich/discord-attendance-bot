@@ -3,5 +3,6 @@
     "autoDeleteDelay": "30",
     "modRoleID": "858388160084836353",
     "guildID": "819420666615955457",
-    "attendanceChannel": "1166889207659249745"
+    "attendanceChannel": "1166889207659249745",
+    "attendanceOutputChannel": "1167490124918030496"
 }
