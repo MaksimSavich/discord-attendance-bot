@@ -1,4 +1,6 @@
 import discord
+import time
+import math
 import settings
 import pandas as pd
 from discord.ext import commands, tasks
@@ -14,10 +16,12 @@ class general(commands.Cog, description='General commands'):
     # Variable that is set equal to the output from the bot so that it can be deleted after the cog is invoked
     msg = None
 
-    # @tasks.loop(seconds=5.0)
-    # async def printer(self):
-    #     print(self.index)
-    #     self.index += 1
+    @tasks.loop(seconds=5.0)
+    async def printer(self):
+        df = pd.read_csv('./dataframes/users.csv')
+        for i in len(df.index):
+            df.loc[df[df['event_end_time_unix'] == math.floor(time.time())].index[0], 'name']
+
 
     @app_commands.command(name="signup",description="Signs a user up for the attendance bot")
     async def signup(self, interaction: discord.Interaction, name: str):
