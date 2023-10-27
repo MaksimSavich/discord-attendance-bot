@@ -11,14 +11,13 @@ class general(commands.Cog, description='General commands'):
 
     def __init__(self, bot):
         self.bot = bot
-        # self.index = 0
-        self.printer.start()
+        self.auto_event_end.start()
 
     # Variable that is set equal to the output from the bot so that it can be deleted after the cog is invoked
     msg = None
 
-    @tasks.loop(seconds=5.0)
-    async def printer(self):
+    @tasks.loop(minutes=5.0)
+    async def auto_event_end(self):
         channel = self.bot.get_channel(settings.attendanceOutputChannel)
         df = pd.read_csv('./dataframes/eventlist.csv')
         for index, row in df.iterrows():

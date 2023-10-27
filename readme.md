@@ -30,6 +30,6 @@ A discord bot written in python using the discord.py library that handles user a
 
 ## TODO
 - [x] Switch all commands to slash commands
-- [ ] Ensure everything works smoothly with slash commands
+- [X] Ensure everything works smoothly with slash commands
 - [ ] Slash command error handling
-- [ ] Finish multi-event setup
+- [X] Finish multi-event setup
