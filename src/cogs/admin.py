@@ -94,6 +94,10 @@ class admin(commands.Cog, description='Administration commands'):
         channel = self.bot.get_channel(settings.attendanceOutputChannel)
         df = pd.read_csv('./dataframes/eventlist.csv')
         index = df.loc[df['code'] == code].index[0]
+        if (not (code in df['code'].unique())):
+            embed = discord.Embed(color=0xFDFD96, description=f'Event does not exist!')
+            await interaction.response.send_message(embed=embed, ephemeral=True)
+            return
         if channel:
             try:
                 filename = df.loc[index, "filename"]
@@ -121,7 +125,7 @@ class admin(commands.Cog, description='Administration commands'):
             embed = discord.Embed(color=0xFDFD96, description=f'Event already exists with that code!')
             await interaction.response.send_message(embed=embed, ephemeral=True)
             return
-        if (code in df['event_name'].unique()):
+        if (event_name in df['event_name'].unique()):
             embed = discord.Embed(color=0xFDFD96, description=f'Event already exists with that name!')
             await interaction.response.send_message(embed=embed, ephemeral=True)
             return
