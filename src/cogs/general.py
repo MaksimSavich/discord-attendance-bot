@@ -24,25 +24,29 @@ class general(commands.Cog, description='General commands'):
             if row['event_end_time_unix'] < math.floor(time.time()):
                 if channel:
                     try:
-                        filename = df.loc[index, "filename"]
-                        await channel.send(file=discord.File(rf'./dataframes/{filename}.csv'))
+                        filename = df.loc[index, 'filename']
+                        embed = discord.Embed(color=0xFDFD96, description=f'Event DB Dump: {filename}')
+                        await channel.send(embed=embed, file=discord.File(rf'./dataframes/{filename}.csv'))
                         df.drop(index, inplace=True)
                         df.to_csv('./dataframes/eventlist.csv', index=False)
                         os.remove(f'./dataframes/{filename}.csv')
                     except Exception as e:
-                        print(f'An error occurred while sending the file: {e}')
+                        embed = discord.Embed(color=0xFDFD96, title='Automated Response',description=f'Error: Attendance file not found!\nERROR:\n{e}')
+                        await channel.send(embed=embed)
                 else:
-                        print('Channel not found.')
+                    print('Auto Event End Error Response: Channel not found!')
 
     @app_commands.command(name="signup",description="Signs a user up for the attendance bot")
     async def signup(self, interaction: discord.Interaction, name: str):
         df = pd.read_csv('./dataframes/users.csv')
         if (interaction.user.id in df['uuid'].unique()):
-            await interaction.response.send_message('```ini\nYou have already signed up.\n```')
+            embed = discord.Embed(color=0xFDFD96, description='You have already signed up.')
+            await interaction.response.send_message(embed=embed, ephemeral=True)
             return
+        embed = discord.Embed(color=0xFDFD96, description='You have successfully signed up to use the attendance bot!')
         df.loc[len(df.index)] = [name, interaction.user.id]
         df.to_csv('./dataframes/users.csv', index=False)
-        await interaction.response.send_message('```ini\nYou have signed up.\n```')
+        await interaction.response.send_message(embed=embed, ephemeral=True)
 
     @app_commands.command(name="attend",description="Allows user to attend an event")
     async def attend(self, interaction: discord.Interaction, code:str):
@@ -56,16 +60,16 @@ class general(commands.Cog, description='General commands'):
                         name = dfUser.loc[dfUser[dfUser['uuid'] == interaction.user.id].index[0], 'name']
                         dfEvent = pd.read_csv(f'./dataframes/{filename}.csv')
                         if (interaction.user.id in dfEvent['uuid'].unique()):
-                            await interaction.response.send_message('```ini\nYour attendance has already been marked.\n```')
+                            embed = discord.Embed(color=0xFDFD96, description='Your attendance has already been marked.')
+                            await interaction.response.send_message(embed=embed, ephemeral=True)
                             return
                         dfEvent.loc[len(dfEvent.index)] = [name,interaction.user.id]
                         dfEvent.to_csv(f'./dataframes/{filename}.csv', index=False)
-                        await interaction.response.send_message('```ini\nYour attendance has been recorded.\n```')
+                        embed = discord.Embed(color=0xFDFD96, description='Your attendance has been recorded.')
+                        await interaction.response.send_message(embed=embed, ephemeral=True)
                 else:
-                    await interaction.response.send_message('```ini\nWrong code!\n```')
-
-        
-                        
+                    embed = discord.Embed(color=0xFDFD96, description='That code doesn\'t exist! Make sure you have typed the correct code.')
+                    await interaction.response.send_message(embed=embed, ephemeral=True)
 
     # Deletes the command sent by the user
     # async def cog_before_invoke(self, ctx):

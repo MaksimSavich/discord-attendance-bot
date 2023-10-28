@@ -50,7 +50,8 @@ async def reload_autocomplete(
 async def reloads(interaction: discord.Interaction, extension: str):
     await bot.unload_extension(f'cogs.{extension}')
     await bot.load_extension(f'cogs.{extension}')
-    await interaction.response.send_message(f'```ini\n[{extension}]: Reloaded\n```')
+    embed = discord.Embed(color=0xFDFD96, description=f'{extension}: Reloaded.')
+    await interaction.response.send_message(embed=embed)
 
 @bot.event
 async def on_ready():
@@ -60,19 +61,20 @@ async def on_ready():
     print(f'We have logged in as {bot.user}')
 
 # custom bot event that handles command errors
-@bot.event
-async def on_command_error(ctx, error):
-    await ctx.message.delete()
-    if(error):
-        msg = await ctx.send(f'```ini\n[Error]\n\n{error}\n```')
-    elif(ctx.invoked_with.lower() != 'help'):
-        msg = await ctx.send(f'```ini\n[Error]\n\nCommand \"{ctx.invoked_with}\" was not found\n```')
+# currently not working since I switched to slash commands
+# @bot.event
+# async def on_command_error(ctx, error):
+#     await ctx.message.delete()
+#     if(error):
+#         msg = await ctx.send(f'```ini\n[Error]\n\n{error}\n```')
+#     elif(ctx.invoked_with.lower() != 'help'):
+#         msg = await ctx.send(f'```ini\n[Error]\n\nCommand \"{ctx.invoked_with}\" was not found\n```')
     
-    await asyncio.sleep(settings.autoDeleteDelay)
-    try:
-        await msg.delete()
-    except:
-        pass
+#     await asyncio.sleep(settings.autoDeleteDelay)
+#     try:
+#         await msg.delete()
+#     except:
+#         pass
 
 load_dotenv()
 bot.run(os.getenv('TOKEN'))
