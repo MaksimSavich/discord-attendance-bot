@@ -16,6 +16,7 @@ class general(commands.Cog, description='General commands'):
     # Variable that is set equal to the output from the bot so that it can be deleted after the cog is invoked
     msg = None
 
+    # Loop that checks for the end of an event and processes the DB upon the end of an event
     @tasks.loop(minutes=5.0)
     async def auto_event_end(self):
         channel = self.bot.get_channel(settings.attendanceOutputChannel)
@@ -70,20 +71,6 @@ class general(commands.Cog, description='General commands'):
                 else:
                     embed = discord.Embed(color=0xFDFD96, description='That code doesn\'t exist! Make sure you have typed the correct code.')
                     await interaction.response.send_message(embed=embed, ephemeral=True)
-
-    # Deletes the command sent by the user
-    # async def cog_before_invoke(self, ctx):
-    #     await ctx.message.delete()
-
-    # Deletes the output from the bot after a certain amount of time
-    # async def cog_after_invoke(self, ctx):
-    #     if self.msg != None:
-    #         await asyncio.sleep(settings.autoDeleteDelay)
-    #         try:
-    #             await self.msg.delete()
-    #         except:
-    #             pass
-    #         self.msg = None
 
 # Registers the cog
 async def setup(bot):

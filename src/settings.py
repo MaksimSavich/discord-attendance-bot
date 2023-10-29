@@ -5,9 +5,10 @@ import json
 # Generates a config.json file if one doesn't exist
 if not os.path.isfile('./src/config.json'):
     data = {
-        "prefix": "!",
-        "autoDeleteDelay": "30",
-        "modRoleID": "12345679"
+        "modRoleID": "123",
+        "guildID": "123",
+        "attendanceChannel": "123",
+        "attendanceOutputChannel": "123"
     }
     json_object = json.dumps(data, indent=4)
     with open("./src/config.json", "w") as outfile:
@@ -28,8 +29,6 @@ with open(CONFIG_DIR, "r") as file:
     config = json.load(file)
 
 # Variables that are set equal to the value of the key they are named the same ass
-prefix = config['prefix']
-autoDeleteDelay = int(config['autoDeleteDelay'])
 modRoleID = int(config['modRoleID'])
 guildID = int(config['guildID'])
 attendanceChannel = int(config['attendanceChannel'])

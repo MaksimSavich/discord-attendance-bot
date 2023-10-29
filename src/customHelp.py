@@ -13,7 +13,7 @@ class customHelp(commands.HelpCommand):
         for cog in mapping:
             if (cog != None):
                 cogs += f'[{cog.qualified_name}] {cog.description}\n'
-        res = f'```ini\n[ Spite ]\n\n<> = required, [] = optional\n{settings.prefix}help [command]\n\n{cogs}```'
+        res = f'```ini\n[ Solar Attendance ]\n\n<> = required, [] = optional\n{settings.prefix}help [command]\n\n{cogs}```'
         msg = await self.get_destination().send(res)
         await asyncio.sleep(settings.autoDeleteDelay)
         try:
@@ -40,7 +40,7 @@ class customHelp(commands.HelpCommand):
     #     gcmds = ''
     #     for command in enumerate(group.commands):
     #         gcmds += '[ ' + f'{settings.prefix}' + command.name + ' ] ' + command.description + '\n'
-    #     res = f'```ini\n[ Spite ]\n\n<> = required, [] optional\n{settings.prefix}help [command]\n\n{gcmds}```'
+    #     res = f'```ini\n[ Solar Attendance ]\n\n<> = required, [] optional\n{settings.prefix}help [command]\n\n{gcmds}```'
     #     await self.get_destination().send(res)
 
     async def send_command_help(self, command):

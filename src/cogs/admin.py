@@ -19,6 +19,14 @@ class admin(commands.Cog, description='Administration commands'):
     # Variable that is set equal to the output from the bot so that it can be deleted after the cog is invoked
     msg = None
 
+    @app_commands.command(name="setguildid",description="Updates the guild ID")
+    @app_commands.check(permissions.is_admin)
+    async def setguildid(self, interaction: discord.Interaction, guild_id: str):
+        await settings.modifyConfig('guildID', guild_id)
+        importlib.reload(settings)
+        embed = discord.Embed(color=0xFDFD96, description=f'Guild ID updated.')
+        await interaction.response.send_message(embed=embed)
+
     @app_commands.command(name="updatemodrole",description="Updates the mod role ID")
     @app_commands.check(permissions.is_admin)
     async def updatemodrole(self, interaction: discord.Interaction, role_id: str):
@@ -93,13 +101,9 @@ class admin(commands.Cog, description='Administration commands'):
         code = code.split(' ')[0].lower()
         channel = self.bot.get_channel(settings.attendanceOutputChannel)
         df = pd.read_csv('./dataframes/eventlist.csv')
-        index = df.loc[df['code'] == code].index[0]
-        if (not (code in df['code'].unique())):
-            embed = discord.Embed(color=0xFDFD96, description=f'Event does not exist!')
-            await interaction.response.send_message(embed=embed, ephemeral=True)
-            return
         if channel:
             try:
+                index = df.loc[df['code'] == code].index[0]
                 filename = df.loc[index, "filename"]
                 df.drop(index, inplace=True)
                 df.to_csv('./dataframes/eventlist.csv', index=False)
@@ -109,7 +113,7 @@ class admin(commands.Cog, description='Administration commands'):
                 embed2 = discord.Embed(color=0xFDFD96, description=f'Succesfully ended the event {filename}')
                 await interaction.response.send_message(embed=embed2)
             except Exception as e:
-                embed = discord.Embed(color=0xFDFD96, title='Automated Response', description=f'Error: Attendance file not found! Please contact an admin.')
+                embed = discord.Embed(color=0xFDFD96, title='Automated Response', description=f'Error: Attendance file not found! Did you enter the correct code? If not, please contact an admin.')
                 await interaction.response.send_message(embed=embed)
         else:
             embed = discord.Embed(color=0xFDFD96, title='Automated Response', description=f'Error: Attendance output channel not found! Please contact an admin.')
@@ -141,20 +145,6 @@ class admin(commands.Cog, description='Administration commands'):
         embed = discord.Embed(color=0xFDFD96, description=f'Event \'{event_name}\' created')
         await interaction.response.send_message(embed=embed)
         
-    # Deletes the command sent by the user
-    # async def cog_before_invoke(self, ctx):
-    #     await ctx.message.delete()
-
-    # Deletes the output from the bot after a certain amount of time
-    # async def cog_after_invoke(self, ctx):
-    #     if self.msg != None:
-    #         await asyncio.sleep(settings.autoDeleteDelay)
-    #         try:
-    #             await self.msg.delete()
-    #         except:
-    #             pass
-    #         self.msg = None
-
 # Registers the cog
 async def setup(bot):
     await bot.add_cog(admin(bot), guilds = [discord.Object(id=settings.guildID)]  )
