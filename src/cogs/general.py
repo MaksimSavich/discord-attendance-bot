@@ -1,5 +1,5 @@
-import discord
 import os
+import discord
 import time
 import math
 import settings
@@ -26,7 +26,7 @@ class general(commands.Cog, description='General commands'):
                 if channel:
                     try:
                         filename = df.loc[index, 'filename']
-                        embed = discord.Embed(color=0xFDFD96, description=f'Event DB Dump: {filename}')
+                        embed = discord.Embed(color=0xFDFD96, description=f'Auto Event DB Dump: {filename}')
                         await channel.send(embed=embed, file=discord.File(rf'./dataframes/{filename}.csv'))
                         df.drop(index, inplace=True)
                         df.to_csv('./dataframes/eventlist.csv', index=False)
@@ -37,7 +37,7 @@ class general(commands.Cog, description='General commands'):
                 else:
                     print('Auto Event End Error Response: Channel not found!')
 
-    @app_commands.command(name="signup",description="Signs a user up for the attendance bot")
+    @app_commands.command(name="signup",description="Signs user up for the attendance bot")
     async def signup(self, interaction: discord.Interaction, name: str):
         df = pd.read_csv('./dataframes/users.csv')
         if (interaction.user.id in df['uuid'].unique()):

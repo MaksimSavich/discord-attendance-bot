@@ -28,7 +28,8 @@ CONFIG_DIR = BASE_DIR / 'config.json'
 with open(CONFIG_DIR, "r") as file:
     config = json.load(file)
 
-# Variables that are set equal to the value of the key they are named the same ass
+# Variables that are set equal to the value of the key they are named the same as
+prefix = config['prefix']
 modRoleID = int(config['modRoleID'])
 guildID = int(config['guildID'])
 attendanceChannel = int(config['attendanceChannel'])

@@ -1,6 +1,6 @@
 import os
 import discord
-import settings, customHelp, permissions
+import settings, permissions
 import pandas as pd
 from pathlib import Path
 from discord.ext import commands
@@ -10,7 +10,7 @@ from dotenv import load_dotenv
 intents = discord.Intents.default()
 intents.message_content = True
 
-bot = commands.Bot(command_prefix=settings.prefix, help_command=customHelp.customHelp() , intents=intents)
+bot = commands.Bot(command_prefix=settings.prefix, intents=intents)
 
 async def generate_dataframe_files():
     Path("./dataframes/").mkdir(parents=True, exist_ok=True)

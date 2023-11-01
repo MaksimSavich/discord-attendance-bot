@@ -1,5 +1,5 @@
-import discord
 import os
+import discord
 import pandas as pd
 import settings, syscommands, permissions
 import asyncio
@@ -27,9 +27,9 @@ class admin(commands.Cog, description='Administration commands'):
         embed = discord.Embed(color=0xFDFD96, description=f'Guild ID updated.')
         await interaction.response.send_message(embed=embed)
 
-    @app_commands.command(name="updatemodrole",description="Updates the mod role ID")
+    @app_commands.command(name="setmodrole",description="Updates the mod role ID")
     @app_commands.check(permissions.is_admin)
-    async def updatemodrole(self, interaction: discord.Interaction, role_id: str):
+    async def setmodrole(self, interaction: discord.Interaction, role_id: str):
         await settings.modifyConfig('modRoleID', role_id)
         importlib.reload(settings)
         embed = discord.Embed(color=0xFDFD96, description=f'Mod role ID updated.')
@@ -43,16 +43,16 @@ class admin(commands.Cog, description='Administration commands'):
         embed = discord.Embed(color=0xFDFD96, description=f'Attendance channel updated.')
         await interaction.response.send_message(embed=embed)
 
-    @app_commands.command(name="setoutput",description="Updates the attendance output channel ID")
+    @app_commands.command(name="setoutputchannel",description="Updates the attendance output channel ID")
     @app_commands.check(permissions.is_admin)
-    async def setoutput(self, interaction: discord.Interaction, channel_id: str):
+    async def setoutputchannel(self, interaction: discord.Interaction, channel_id: str):
         await settings.modifyConfig('attendanceOutputChannel', channel_id)
         importlib.reload(settings)
         embed = discord.Embed(color=0xFDFD96, description=f'Attendance output channel updated.')
         await interaction.response.send_message(embed=embed)
 
     @app_commands.command(name="purge",description="Purges chat")
-    @app_commands.check(permissions.is_mod)
+    @app_commands.check(permissions.is_admin)
     async def purge(self, interaction: discord.Interaction, amount: int):
         embed = discord.Embed(color=0xFDFD96, description=f'Purging {amount} messages.')
         await interaction.response.send_message(embed=embed, ephemeral=True)
@@ -62,7 +62,7 @@ class admin(commands.Cog, description='Administration commands'):
             await message.delete()
 
     @app_commands.command(name="reboot",description="Reboots the bot")
-    @app_commands.check(permissions.is_mod)
+    @app_commands.check(permissions.is_admin)
     async def reboot(self, interaction: discord.Interaction):
         embed = discord.Embed(color=0xFDFD96, description=f'Rebooting...')
         await interaction.response.send_message(embed=embed, ephemeral=True)
