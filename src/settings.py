@@ -3,7 +3,7 @@ import pathlib
 import json
 
 # Generates a config.json file if one doesn't exist
-if not os.path.isfile('./src/config.json'):
+if not os.path.isfile('../config.json'):
     data = {
         "prefix": "!",
         "modRoleID": "123",
