@@ -12,7 +12,7 @@ if not os.path.isfile('../config.json'):
         "attendanceOutputChannel": "123"
     }
     json_object = json.dumps(data, indent=4)
-    with open("./src/config.json", "w") as outfile:
+    with open("../config.json", "w") as outfile:
         outfile.write(json_object)
 
 
