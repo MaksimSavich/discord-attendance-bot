@@ -5,6 +5,7 @@ import json
 # Generates a config.json file if one doesn't exist
 if not os.path.isfile('./src/config.json'):
     data = {
+        "prefix": "!",
         "modRoleID": "123",
         "guildID": "123",
         "attendanceChannel": "123",
