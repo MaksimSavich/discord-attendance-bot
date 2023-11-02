@@ -2,20 +2,6 @@ import os
 import pathlib
 import json
 
-# Generates a config.json file if one doesn't exist
-if not os.path.isfile('../config.json'):
-    data = {
-        "prefix": "!",
-        "modRoleID": "123",
-        "guildID": "123",
-        "attendanceChannel": "123",
-        "attendanceOutputChannel": "123"
-    }
-    json_object = json.dumps(data, indent=4)
-    with open("../config.json", "w") as outfile:
-        outfile.write(json_object)
-
-
 # Sets BASE_DIR = to the base directory
 BASE_DIR = pathlib.Path(__file__).parent
 
@@ -24,6 +10,20 @@ COGS_DIR = BASE_DIR / 'cogs'
 
 # Sets COBNFIG_DIR = to the config.json file
 CONFIG_DIR = BASE_DIR / 'config.json'
+
+# Generates a config.json file if one doesn't exist
+if not os.path.isfile(CONFIG_DIR):
+    data = {
+        "prefix": "!",
+        "modRoleID": "123",
+        "guildID": "123",
+        "attendanceChannel": "123",
+        "attendanceOutputChannel": "123"
+    }
+    json_object = json.dumps(data, indent=4)
+    with open(CONFIG_DIR, "w") as outfile:
+        outfile.write(json_object)
+
 
 # Opens config.json
 with open(CONFIG_DIR, "r") as file:

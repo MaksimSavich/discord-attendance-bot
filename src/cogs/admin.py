@@ -113,7 +113,7 @@ class admin(commands.Cog, description='Administration commands'):
                 embed2 = discord.Embed(color=0xFDFD96, description=f'Succesfully ended the event {filename}')
                 await interaction.response.send_message(embed=embed2)
             except Exception as e:
-                embed = discord.Embed(color=0xFDFD96, title='Automated Response', description=f'Error: Attendance file not found! Did you enter the correct code? If not, please contact an admin.')
+                embed = discord.Embed(color=0xFDFD96, title='Automated Response', description=f'Error: Attendance file not found! Did you enter the correct code? If not, please contact an admin.\n{e}')
                 await interaction.response.send_message(embed=embed)
         else:
             embed = discord.Embed(color=0xFDFD96, title='Automated Response', description=f'Error: Attendance output channel not found! Please contact an admin.')
