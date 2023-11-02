@@ -71,6 +71,12 @@ class general(commands.Cog, description='General commands'):
                 else:
                     embed = discord.Embed(color=0xFDFD96, description='That code doesn\'t exist! Make sure you have typed the correct code.')
                     await interaction.response.send_message(embed=embed, ephemeral=True)
+            else:
+                embed = discord.Embed(color=0xFDFD96, description='You must signup first before using this command!')
+                await interaction.response.send_message(embed=embed, ephemeral=True)
+        else:
+            embed = discord.Embed(color=0xFDFD96, description='You must use this command in the attendance channel!')
+            await interaction.response.send_message(embed=embed, ephemeral=True)
 
 # Registers the cog
 async def setup(bot):
