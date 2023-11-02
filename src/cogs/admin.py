@@ -20,7 +20,7 @@ class admin(commands.Cog, description='Administration commands'):
     msg = None
 
     @app_commands.command(name="setguildid",description="Updates the guild ID")
-    @app_commands.check(permissions.is_admin)
+    @app_commands.check(permissions.is_mod)
     async def setguildid(self, interaction: discord.Interaction, guild_id: str):
         await settings.modifyConfig('guildID', guild_id)
         importlib.reload(settings)
@@ -28,7 +28,7 @@ class admin(commands.Cog, description='Administration commands'):
         await interaction.response.send_message(embed=embed)
 
     @app_commands.command(name="setmodrole",description="Updates the mod role ID")
-    @app_commands.check(permissions.is_admin)
+    @app_commands.check(permissions.is_mod)
     async def setmodrole(self, interaction: discord.Interaction, role_id: str):
         await settings.modifyConfig('modRoleID', role_id)
         importlib.reload(settings)
@@ -36,7 +36,7 @@ class admin(commands.Cog, description='Administration commands'):
         await interaction.response.send_message(embed=embed)
 
     @app_commands.command(name="setattendancechannel",description="Updates the attendance channel ID")
-    @app_commands.check(permissions.is_admin)
+    @app_commands.check(permissions.is_mod)
     async def setattendancechannel(self, interaction: discord.Interaction, channel_id: str):
         await settings.modifyConfig('attendanceChannel', channel_id)
         importlib.reload(settings)
@@ -44,7 +44,7 @@ class admin(commands.Cog, description='Administration commands'):
         await interaction.response.send_message(embed=embed)
 
     @app_commands.command(name="setoutputchannel",description="Updates the attendance output channel ID")
-    @app_commands.check(permissions.is_admin)
+    @app_commands.check(permissions.is_mod)
     async def setoutputchannel(self, interaction: discord.Interaction, channel_id: str):
         await settings.modifyConfig('attendanceOutputChannel', channel_id)
         importlib.reload(settings)
@@ -52,7 +52,7 @@ class admin(commands.Cog, description='Administration commands'):
         await interaction.response.send_message(embed=embed)
 
     @app_commands.command(name="purge",description="Purges chat")
-    @app_commands.check(permissions.is_admin)
+    @app_commands.check(permissions.is_mod)
     async def purge(self, interaction: discord.Interaction, amount: int):
         embed = discord.Embed(color=0xFDFD96, description=f'Purging {amount} messages.')
         await interaction.response.send_message(embed=embed, ephemeral=True)
@@ -62,7 +62,7 @@ class admin(commands.Cog, description='Administration commands'):
             await message.delete()
 
     @app_commands.command(name="reboot",description="Reboots the bot")
-    @app_commands.check(permissions.is_admin)
+    @app_commands.check(permissions.is_mod)
     async def reboot(self, interaction: discord.Interaction):
         embed = discord.Embed(color=0xFDFD96, description=f'Rebooting...')
         await interaction.response.send_message(embed=embed, ephemeral=True)
