@@ -1,5 +1,5 @@
 .env
 __pycache__
 ./src/cogs/__pycache__
-./src/config.json
+config.json
 *.csv
