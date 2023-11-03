@@ -95,6 +95,21 @@ class admin(commands.Cog, description='Administration commands'):
         embed = discord.Embed(color=0xFDFD96, description=f'The user\'s name has been updated.')
         await interaction.response.send_message(embed=embed, ephemeral=True)
 
+    @app_commands.command(name="events",description="Outputs a list of active events")
+    @app_commands.check(permissions.is_mod)
+    async def events(self, interaction: discord.Interaction):
+        df = pd.read_csv('./dataframes/eventlist.csv')
+        event_names = df['event_name'].tolist()
+        codes = df['code'].tolist()
+        event_end_times_unix = df['event_end_time_unix'].tolist()
+
+        embed = discord.Embed(color=0xFDFD96, title='Event List')
+        for i in range (len(df.index)):
+            embed.add_field(name='Event Name', value=event_names[i], inline=True)
+            embed.add_field(name='Code', value=codes[i], inline=True)
+            embed.add_field(name='Time Remaining (H:M:S)', value=time.strftime("%H:%M:%S", time.gmtime(abs(event_end_times_unix[i]-math.floor(time.time())))), inline=True)
+        await interaction.response.send_message(embed=embed, ephemeral=True)
+
     @app_commands.command(name="endevent",description="Ends an event")
     @app_commands.check(permissions.is_mod)
     async def endevent(self, interaction: discord.Interaction, code:str):
