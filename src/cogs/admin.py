@@ -65,7 +65,7 @@ class admin(commands.Cog, description='Administration commands'):
     @app_commands.check(permissions.is_mod)
     async def reboot(self, interaction: discord.Interaction):
         embed = discord.Embed(color=0xFDFD96, description=f'Rebooting...')
-        await interaction.response.send_message(embed=embed, ephemeral=True)
+        await interaction.response.send_message(embed=embed)
         syscommands.reboot()
 
     @app_commands.command(name="getusersdb",description="Sends the users .csv file")
@@ -94,6 +94,23 @@ class admin(commands.Cog, description='Administration commands'):
         df.to_csv('./dataframes/users.csv', index=False)
         embed = discord.Embed(color=0xFDFD96, description=f'The user\'s name has been updated.')
         await interaction.response.send_message(embed=embed, ephemeral=True)
+
+    @app_commands.command(name="checkattendance",description="Lists all people who have attended an active event")
+    @app_commands.check(permissions.is_mod)
+    async def changename(self, interaction: discord.Interaction, code:str):
+        df = pd.read_csv('./dataframes/eventlist.csv')
+        index = df.loc[df['code'] == code].index[0]
+        filename = df.loc[index, "filename"]
+        dfevent = pd.read_csv(f'./dataframes/{filename}.csv')
+        users = dfevent['name'].tolist()
+        name_list = ''
+
+        embed = discord.Embed(color=0xFDFD96, title=f'{filename} Attendance')
+        for i in range (len(dfevent.index)):
+            name_list = name_list + users[i] + '\n'
+        embed.add_field(name='Users', value=name_list, inline=True)
+
+        await interaction.response.send_message(embed=embed)
 
     @app_commands.command(name="events",description="Outputs a list of active events")
     @app_commands.check(permissions.is_mod)
