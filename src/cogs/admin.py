@@ -69,6 +69,7 @@ class admin(commands.Cog, description='Administration commands'):
         syscommands.reboot()
 
     @app_commands.command(name="getusersdb",description="Sends the users .csv file")
+    @app_commands.check(permissions.is_mod)
     async def getusersdb(self, interaction: discord.Interaction):
         await interaction.response.send_message(file=discord.File(rf'{settings.BASE_DIR}/dataframes/users.csv'))
 
