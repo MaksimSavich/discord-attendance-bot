@@ -97,7 +97,7 @@ class admin(commands.Cog, description='Administration commands'):
 
     @app_commands.command(name="checkattendance",description="Lists all people who have attended an active event")
     @app_commands.check(permissions.is_mod)
-    async def changename(self, interaction: discord.Interaction, code:str):
+    async def checkattendance(self, interaction: discord.Interaction, code:str):
         df = pd.read_csv('./dataframes/eventlist.csv')
         index = df.loc[df['code'] == code].index[0]
         filename = df.loc[index, "filename"]
