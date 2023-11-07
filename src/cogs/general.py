@@ -20,17 +20,17 @@ class general(commands.Cog, description='General commands'):
     @tasks.loop(minutes=5.0)
     async def auto_event_end(self):
         channel = self.bot.get_channel(settings.attendanceOutputChannel)
-        df = pd.read_csv('./dataframes/eventlist.csv')
+        df = pd.read_csv(f'{settings.BASE_DIR}/dataframes/eventlist.csv')
         for index, row in df.iterrows():
             if row['event_end_time_unix'] < math.floor(time.time()):
                 if channel:
                     try:
                         filename = df.loc[index, 'filename']
                         embed = discord.Embed(color=0xFDFD96, description=f'Auto Event DB Dump: {filename}')
-                        await channel.send(embed=embed, file=discord.File(rf'./dataframes/{filename}.csv'))
+                        await channel.send(embed=embed, file=discord.File(rf'{settings.BASE_DIR}/dataframes/{filename}.csv'))
                         df.drop(index, inplace=True)
-                        df.to_csv('./dataframes/eventlist.csv', index=False)
-                        os.remove(f'./dataframes/{filename}.csv')
+                        df.to_csv(f'{settings.BASE_DIR}/dataframes/eventlist.csv', index=False)
+                        os.remove(f'{settings.BASE_DIR}/dataframes/{filename}.csv')
                     except Exception as e:
                         embed = discord.Embed(color=0xFDFD96, title='Automated Response',description=f'Error: Attendance file not found!\nERROR:\n{e}')
                         await channel.send(embed=embed)
@@ -39,33 +39,37 @@ class general(commands.Cog, description='General commands'):
 
     @app_commands.command(name="signup",description="Signs user up for the attendance bot")
     async def signup(self, interaction: discord.Interaction, name: str):
-        df = pd.read_csv('./dataframes/users.csv')
+        df = pd.read_csv(f'{settings.BASE_DIR}/dataframes/users.csv')
         if (interaction.user.id in df['uuid'].unique()):
             embed = discord.Embed(color=0xFDFD96, description='You have already signed up.')
             await interaction.response.send_message(embed=embed, ephemeral=True)
             return
+        if not all(char.isalpha() or char.isspace() for char in name):
+            embed = discord.Embed(color=0xFDFD96, description='Please only use letters for your name.')
+            await interaction.response.send_message(embed=embed, ephemeral=True)
+            return
         embed = discord.Embed(color=0xFDFD96, description='You have successfully signed up to use the attendance bot!')
         df.loc[len(df.index)] = [name, interaction.user.id]
-        df.to_csv('./dataframes/users.csv', index=False)
+        df.to_csv(f'{settings.BASE_DIR}/dataframes/users.csv', index=False)
         await interaction.response.send_message(embed=embed, ephemeral=True)
 
     @app_commands.command(name="attend",description="Allows user to attend an event")
     async def attend(self, interaction: discord.Interaction, code:str):
         code = code.split(' ')[0].lower()
         if interaction.channel_id == settings.attendanceChannel:
-            dfUser = pd.read_csv('./dataframes/users.csv')
+            dfUser = pd.read_csv(f'{settings.BASE_DIR}/dataframes/users.csv')
             if (interaction.user.id in dfUser['uuid'].unique()):
-                dfEventCheck = pd.read_csv('./dataframes/eventlist.csv')
+                dfEventCheck = pd.read_csv(f'{settings.BASE_DIR}/dataframes/eventlist.csv')
                 if (code in dfEventCheck['code'].unique()):
                         filename = dfEventCheck.loc[dfEventCheck[dfEventCheck['code'] == code].index[0], 'filename']
                         name = dfUser.loc[dfUser[dfUser['uuid'] == interaction.user.id].index[0], 'name']
-                        dfEvent = pd.read_csv(f'./dataframes/{filename}.csv')
+                        dfEvent = pd.read_csv(f'{settings.BASE_DIR}/dataframes/{filename}.csv')
                         if (interaction.user.id in dfEvent['uuid'].unique()):
                             embed = discord.Embed(color=0xFDFD96, description='Your attendance has already been marked.')
                             await interaction.response.send_message(embed=embed, ephemeral=True)
                             return
                         dfEvent.loc[len(dfEvent.index)] = [name,interaction.user.id]
-                        dfEvent.to_csv(f'./dataframes/{filename}.csv', index=False)
+                        dfEvent.to_csv(f'{settings.BASE_DIR}/dataframes/{filename}.csv', index=False)
                         embed = discord.Embed(color=0xFDFD96, description='Your attendance has been recorded.')
                         await interaction.response.send_message(embed=embed, ephemeral=True)
                 else:

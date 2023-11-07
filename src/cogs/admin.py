@@ -71,37 +71,37 @@ class admin(commands.Cog, description='Administration commands'):
     @app_commands.command(name="getusersdb",description="Sends the users .csv file")
     @app_commands.check(permissions.is_mod)
     async def getusersdb(self, interaction: discord.Interaction):
-        await interaction.response.send_message(file=discord.File(r'./dataframes/users.csv'))
+        await interaction.response.send_message(file=discord.File(rf'{settings.BASE_DIR}/dataframes/users.csv'))
 
     @app_commands.command(name="fadd",description="Force adds a new user to the users database")
     @app_commands.check(permissions.is_mod)
     async def fadd(self, interaction: discord.Interaction, user_id: str, name: str):
-        df = pd.read_csv('./dataframes/users.csv')
+        df = pd.read_csv(f'{settings.BASE_DIR}/dataframes/users.csv')
         if (int(user_id) in df['uuid'].unique()):
             embed = discord.Embed(color=0xFDFD96, description=f'This user has already signed up.')
             await interaction.response.send_message(embed=embed ,ephemeral=True)
             return
         df.loc[len(df.index)] = [name, int(user_id)]
-        df.to_csv('./dataframes/users.csv', index=False)
+        df.to_csv(f'{settings.BASE_DIR}/dataframes/users.csv', index=False)
         embed = discord.Embed(color=0xFDFD96, description=f'The user has been added to the DB.')
         await interaction.response.send_message(embed=embed ,ephemeral=True)
 
     @app_commands.command(name="changename",description="Changes the name of the user in the users database")
     @app_commands.check(permissions.is_mod)
     async def changename(self, interaction: discord.Interaction, user_id: str, name:str):
-        df = pd.read_csv('./dataframes/users.csv')
+        df = pd.read_csv(f'{settings.BASE_DIR}/dataframes/users.csv')
         df.loc[df[df['uuid'] == int(user_id)].index[0], 'name'] = name
-        df.to_csv('./dataframes/users.csv', index=False)
+        df.to_csv(f'{settings.BASE_DIR}/dataframes/users.csv', index=False)
         embed = discord.Embed(color=0xFDFD96, description=f'The user\'s name has been updated.')
         await interaction.response.send_message(embed=embed, ephemeral=True)
 
     @app_commands.command(name="checkattendance",description="Lists all people who have attended an active event")
     @app_commands.check(permissions.is_mod)
     async def checkattendance(self, interaction: discord.Interaction, code:str):
-        df = pd.read_csv('./dataframes/eventlist.csv')
+        df = pd.read_csv(f'{settings.BASE_DIR}/dataframes/eventlist.csv')
         index = df.loc[df['code'] == code].index[0]
         filename = df.loc[index, "filename"]
-        dfevent = pd.read_csv(f'./dataframes/{filename}.csv')
+        dfevent = pd.read_csv(f'{settings.BASE_DIR}/dataframes/{filename}.csv')
         users = dfevent['name'].tolist()
         name_list = ''
 
@@ -115,7 +115,7 @@ class admin(commands.Cog, description='Administration commands'):
     @app_commands.command(name="events",description="Outputs a list of active events")
     @app_commands.check(permissions.is_mod)
     async def events(self, interaction: discord.Interaction):
-        df = pd.read_csv('./dataframes/eventlist.csv')
+        df = pd.read_csv(f'{settings.BASE_DIR}/dataframes/eventlist.csv')
         event_names = df['event_name'].tolist()
         codes = df['code'].tolist()
         event_end_times_unix = df['event_end_time_unix'].tolist()
@@ -132,16 +132,16 @@ class admin(commands.Cog, description='Administration commands'):
     async def endevent(self, interaction: discord.Interaction, code:str):
         code = code.split(' ')[0].lower()
         channel = self.bot.get_channel(settings.attendanceOutputChannel)
-        df = pd.read_csv('./dataframes/eventlist.csv')
+        df = pd.read_csv(f'{settings.BASE_DIR}/dataframes/eventlist.csv')
         if channel:
             try:
                 index = df.loc[df['code'] == code].index[0]
                 filename = df.loc[index, "filename"]
                 df.drop(index, inplace=True)
-                df.to_csv('./dataframes/eventlist.csv', index=False)
+                df.to_csv(f'{settings.BASE_DIR}/dataframes/eventlist.csv', index=False)
                 embed = discord.Embed(color=0xFDFD96, description=f'Event DB Dump: {filename}')
-                await channel.send(embed=embed, file=discord.File(rf'./dataframes/{filename}.csv'))
-                os.remove(f'./dataframes/{filename}.csv')
+                await channel.send(embed=embed, file=discord.File(rf'{settings.BASE_DIR}/dataframes/{filename}.csv'))
+                os.remove(f'{settings.BASE_DIR}/dataframes/{filename}.csv')
                 embed2 = discord.Embed(color=0xFDFD96, description=f'Succesfully ended the event {filename}')
                 await interaction.response.send_message(embed=embed2)
             except Exception as e:
@@ -154,7 +154,7 @@ class admin(commands.Cog, description='Administration commands'):
     @app_commands.command(name="startevent",description="Creates an event")
     @app_commands.check(permissions.is_mod)
     async def startevent(self, interaction: discord.Interaction, event_name:str, code:str, hours:int):
-        df = pd.read_csv('./dataframes/eventlist.csv')
+        df = pd.read_csv(f'{settings.BASE_DIR}/dataframes/eventlist.csv')
         code = code.split(' ')[0].lower()
         event_name = event_name.replace(' ','_').lower()
         if (code in df['code'].unique()):
@@ -171,9 +171,9 @@ class admin(commands.Cog, description='Administration commands'):
         endtime = datetime.fromtimestamp(epoch)
         filename = f'{event_name}_{str(timestamp).split(" ")[0]}'
         df.loc[len(df.index)] = [event_name,code,timestamp,endtime,epoch,filename]
-        df.to_csv('./dataframes/eventlist.csv', index=False)
+        df.to_csv(f'{settings.BASE_DIR}/dataframes/eventlist.csv', index=False)
         dfNewEvent = pd.DataFrame(columns=['name','uuid'])
-        dfNewEvent.to_csv(f'./dataframes/{filename}.csv', index=False)
+        dfNewEvent.to_csv(f'{settings.BASE_DIR}/dataframes/{filename}.csv', index=False)
         embed = discord.Embed(color=0xFDFD96, description=f'Event \'{event_name}\' created')
         await interaction.response.send_message(embed=embed)
         

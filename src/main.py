@@ -13,13 +13,13 @@ intents.message_content = True
 bot = commands.Bot(command_prefix=settings.prefix, intents=intents)
 
 async def generate_dataframe_files():
-    Path("./dataframes/").mkdir(parents=True, exist_ok=True)
-    if not os.path.isfile('./dataframes/users.csv'):
+    Path(f'{settings.BASE_DIR}/dataframes/').mkdir(parents=True, exist_ok=True)
+    if not os.path.isfile(f'{settings.BASE_DIR}/dataframes/users.csv'):
         dfUsers = pd.DataFrame(columns=['name','uuid'])
-        dfUsers.to_csv('./dataframes/users.csv', index=False)
-    if not os.path.isfile('./dataframes/eventlist.csv'):
+        dfUsers.to_csv(f'{settings.BASE_DIR}/dataframes/users.csv', index=False)
+    if not os.path.isfile(f'{settings.BASE_DIR}/dataframes/eventlist.csv'):
         dfEvents = pd.DataFrame(columns=['event_name','code','event_creation_date','event_end_time','event_end_time_unix','filename'])
-        dfEvents.to_csv('./dataframes/eventlist.csv', index=False)
+        dfEvents.to_csv(f'{settings.BASE_DIR}/dataframes/eventlist.csv', index=False)
 
 # Function to load cogs dynamically
 async def load_cogs():
