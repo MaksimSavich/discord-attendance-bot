@@ -156,6 +156,10 @@ class admin(commands.Cog, description='Administration commands'):
     async def startevent(self, interaction: discord.Interaction, event_name:str, code:str, hours:int):
         df = pd.read_csv(f'{settings.BASE_DIR}/dataframes/eventlist.csv')
         code = code.split(' ')[0].lower()
+        if not all(char.isalnum() or char.isspace() for char in event_name):
+            embed = discord.Embed(color=0xFDFD96, description='Please only use alphanumeric characters!\nOnly Aa-Zz 0-9 and spaces are allowed.\nDON\'T USE SLASHES! ')
+            await interaction.response.send_message(embed=embed, ephemeral=True)
+            return
         event_name = event_name.replace(' ','_').lower()
         if (code in df['code'].unique()):
             embed = discord.Embed(color=0xFDFD96, description=f'Event already exists with that code!')
