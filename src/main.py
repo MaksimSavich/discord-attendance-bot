@@ -20,6 +20,9 @@ async def generate_dataframe_files():
     if not os.path.isfile(f'{settings.BASE_DIR}/dataframes/eventlist.csv'):
         dfEvents = pd.DataFrame(columns=['event_name','code','event_creation_date','event_end_time','event_end_time_unix','filename'])
         dfEvents.to_csv(f'{settings.BASE_DIR}/dataframes/eventlist.csv', index=False)
+    if not os.path.isfile(f'{settings.BASE_DIR}/dataframes/admin_users.csv'):
+        dfEvents = pd.DataFrame(columns=['user_id'])
+        dfEvents.to_csv(f'{settings.BASE_DIR}/dataframes/admin_users.csv', index=False)
 
 # Function to load cogs dynamically
 async def load_cogs():
@@ -43,7 +46,7 @@ async def reload_autocomplete(
     ]
 
 @bot.tree.command(name="reloads",description="Reloads cogs", guild=discord.Object(id=settings.guildID))
-@app_commands.check(permissions.is_admin)
+@app_commands.check(permissions.is_admin_or_mod)
 @app_commands.autocomplete(extension=reload_autocomplete)
 async def reloads(interaction: discord.Interaction, extension: str):
     await bot.unload_extension(f'cogs.{extension}')

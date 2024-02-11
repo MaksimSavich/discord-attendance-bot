@@ -20,7 +20,7 @@ class admin(commands.Cog, description='Administration commands'):
     msg = None
 
     @app_commands.command(name="setguildid",description="Updates the guild ID")
-    @app_commands.check(permissions.is_mod)
+    @app_commands.check(permissions.is_admin_or_mod)
     async def setguildid(self, interaction: discord.Interaction, guild_id: str):
         await settings.modifyConfig('guildID', guild_id)
         importlib.reload(settings)
@@ -28,7 +28,7 @@ class admin(commands.Cog, description='Administration commands'):
         await interaction.response.send_message(embed=embed)
 
     @app_commands.command(name="setmodrole",description="Updates the mod role ID")
-    @app_commands.check(permissions.is_mod)
+    @app_commands.check(permissions.is_admin_or_mod)
     async def setmodrole(self, interaction: discord.Interaction, role_id: str):
         await settings.modifyConfig('modRoleID', role_id)
         importlib.reload(settings)
@@ -36,7 +36,7 @@ class admin(commands.Cog, description='Administration commands'):
         await interaction.response.send_message(embed=embed)
 
     @app_commands.command(name="setattendancechannel",description="Updates the attendance channel ID")
-    @app_commands.check(permissions.is_mod)
+    @app_commands.check(permissions.is_admin_or_mod)
     async def setattendancechannel(self, interaction: discord.Interaction, channel_id: str):
         await settings.modifyConfig('attendanceChannel', channel_id)
         importlib.reload(settings)
@@ -44,7 +44,7 @@ class admin(commands.Cog, description='Administration commands'):
         await interaction.response.send_message(embed=embed)
 
     @app_commands.command(name="setoutputchannel",description="Updates the attendance output channel ID")
-    @app_commands.check(permissions.is_mod)
+    @app_commands.check(permissions.is_admin_or_mod)
     async def setoutputchannel(self, interaction: discord.Interaction, channel_id: str):
         await settings.modifyConfig('attendanceOutputChannel', channel_id)
         importlib.reload(settings)
@@ -52,7 +52,7 @@ class admin(commands.Cog, description='Administration commands'):
         await interaction.response.send_message(embed=embed)
 
     @app_commands.command(name="purge",description="Purges chat")
-    @app_commands.check(permissions.is_mod)
+    @app_commands.check(permissions.is_admin_or_mod) 
     async def purge(self, interaction: discord.Interaction, amount: int):
         embed = discord.Embed(color=0xFDFD96, description=f'Purging {amount} messages.')
         await interaction.response.send_message(embed=embed, ephemeral=True)
@@ -62,19 +62,19 @@ class admin(commands.Cog, description='Administration commands'):
             await message.delete()
 
     @app_commands.command(name="reboot",description="Reboots the bot")
-    @app_commands.check(permissions.is_mod)
+    @app_commands.check(permissions.is_admin_or_mod) 
     async def reboot(self, interaction: discord.Interaction):
         embed = discord.Embed(color=0xFDFD96, description=f'Rebooting...')
         await interaction.response.send_message(embed=embed)
         syscommands.reboot()
 
     @app_commands.command(name="getusersdb",description="Sends the users .csv file")
-    @app_commands.check(permissions.is_mod)
+    @app_commands.check(permissions.is_admin_or_mod)
     async def getusersdb(self, interaction: discord.Interaction):
         await interaction.response.send_message(file=discord.File(rf'{settings.BASE_DIR}/dataframes/users.csv'))
 
     @app_commands.command(name="fadd",description="Force adds a new user to the users database")
-    @app_commands.check(permissions.is_mod)
+    @app_commands.check(permissions.is_admin_or_mod)
     async def fadd(self, interaction: discord.Interaction, user_id: str, name: str):
         df = pd.read_csv(f'{settings.BASE_DIR}/dataframes/users.csv')
         if (int(user_id) in df['uuid'].unique()):
@@ -87,7 +87,7 @@ class admin(commands.Cog, description='Administration commands'):
         await interaction.response.send_message(embed=embed ,ephemeral=True)
 
     @app_commands.command(name="changename",description="Changes the name of the user in the users database")
-    @app_commands.check(permissions.is_mod)
+    @app_commands.check(permissions.is_admin_or_mod)
     async def changename(self, interaction: discord.Interaction, user_id: str, name:str):
         df = pd.read_csv(f'{settings.BASE_DIR}/dataframes/users.csv')
         df.loc[df[df['uuid'] == int(user_id)].index[0], 'name'] = name
@@ -96,7 +96,7 @@ class admin(commands.Cog, description='Administration commands'):
         await interaction.response.send_message(embed=embed, ephemeral=True)
 
     @app_commands.command(name="checkattendance",description="Lists all people who have attended an active event")
-    @app_commands.check(permissions.is_mod)
+    @app_commands.check(permissions.is_admin_or_mod)
     async def checkattendance(self, interaction: discord.Interaction, code:str):
         df = pd.read_csv(f'{settings.BASE_DIR}/dataframes/eventlist.csv')
         index = df.loc[df['code'] == code].index[0]
@@ -113,7 +113,7 @@ class admin(commands.Cog, description='Administration commands'):
         await interaction.response.send_message(embed=embed)
 
     @app_commands.command(name="events",description="Outputs a list of active events")
-    @app_commands.check(permissions.is_mod)
+    @app_commands.check(permissions.is_admin_or_mod)
     async def events(self, interaction: discord.Interaction):
         df = pd.read_csv(f'{settings.BASE_DIR}/dataframes/eventlist.csv')
         event_names = df['event_name'].tolist()
@@ -128,7 +128,7 @@ class admin(commands.Cog, description='Administration commands'):
         await interaction.response.send_message(embed=embed, ephemeral=True)
 
     @app_commands.command(name="endevent",description="Ends an event")
-    @app_commands.check(permissions.is_mod)
+    @app_commands.check(permissions.is_admin_or_mod)
     async def endevent(self, interaction: discord.Interaction, code:str):
         code = code.split(' ')[0].lower()
         channel = self.bot.get_channel(settings.attendanceOutputChannel)
@@ -152,7 +152,7 @@ class admin(commands.Cog, description='Administration commands'):
             await interaction.response.send_message(embed=embed)
 
     @app_commands.command(name="startevent",description="Creates an event")
-    @app_commands.check(permissions.is_mod)
+    @app_commands.check(permissions.is_admin_or_mod)
     async def startevent(self, interaction: discord.Interaction, event_name:str, code:str, hours:int):
         df = pd.read_csv(f'{settings.BASE_DIR}/dataframes/eventlist.csv')
         code = code.split(' ')[0].lower()
